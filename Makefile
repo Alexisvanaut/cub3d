@@ -39,9 +39,7 @@ SRC_DIR = src
 OBJ_DIR = obj
 
 # Source files
-SRC = $(SRC_DIR)/main.c \
-	  $(SRC_DIR)/mlx/mlx_utils.c \
-	  $(SRC_DIR)/mock_data.c
+SRC = $(SRC_DIR)/main.c 
 
 # Object files
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
