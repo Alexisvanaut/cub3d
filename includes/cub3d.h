@@ -26,6 +26,28 @@ typedef struct s_data
 	int		player_y;
 }			t_data;
 
+typedef struct s_mlx
+{
+	void *mlx;
+	void *win;
+	void *img;
+	void *img_date;
+	int bits_per_pixel;
+	int line_lenght;
+	int endian;
+}	t_mlx;
+
+typedef struct s_texture
+{
+	void *img;
+	char *addr;
+	int width;
+	int height;
+	int bpp;
+	int line_len;
+	int endian;
+}	t_texture;
+
 // PARSING
 
 char		**manage_file(char *file);
@@ -39,5 +61,6 @@ bool		check_one_player(t_data *data, char **map);
 bool		check_characters(char **map);
 bool		check_zeros(char **map);
 bool		flood_fill(t_data *data);
+int			parsing_main(int ac, char **av);
 
 #endif
