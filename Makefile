@@ -13,7 +13,7 @@
 NAME		= cub3D
 
 # Directories
-PARSING_DIR	= parsing
+SRC_DIR	= parsing
 OBJ_DIR		= obj
 INC_DIR		= includes
 MLX_DIR		= minilibx-linux
@@ -26,18 +26,18 @@ INCLUDES	= -I$(INC_DIR) -I$(MLX_DIR) -I$(LIBFT_DIR)
 LIBS		= -L$(MLX_DIR) -lmlx -lXext -lX11 -lm -L$(LIBFT_DIR) -lft
 
 # Source files
-PARSING_SRCS = parsing/check_map.c \
-			   parsing/check_zeros.c \
-			   parsing/flood_fill.c \
-			   parsing/main_parsing.c \
-			   parsing/manage_colors.c \
-			   parsing/manage_file.c \
-			   parsing/manage_map.c \
-			   parsing/manage_texture.c \
-			   parsing/parse_map.c
+SRC_SRCS = src/check_map.c \
+			   src/check_zeros.c \
+			   src/flood_fill.c \
+			   src/main_parsing.c \
+			   src/manage_colors.c \
+			   src/manage_file.c \
+			   src/manage_map.c \
+			   src/manage_texture.c \
+			   src/parse_map.c
 
 # Object files
-OBJS		= $(PARSING_SRCS:%.c=$(OBJ_DIR)/%.o)
+OBJS		= $(SRC_SRCS:%.c=$(OBJ_DIR)/%.o)
 
 # Colors
 GREEN		= \033[0;32m
