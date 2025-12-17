@@ -6,7 +6,7 @@
 /*   By: alvanaut <alvanaut@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 00:00:00 by alvanaut          #+#    #+#             */
-/*   Updated: 2025/11/26 00:00:00 by alvanaut         ###   ########.fr       */
+/*   Updated: 2025/12/17 14:00:00 by alvanaut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,19 @@ static bool	load_single_texture(t_data *data, t_img *texture, char *path)
 			&texture->width, &texture->height);
 	if (!texture->img)
 	{
-		printf("Error: Failed to load texture: %s\n", path);
+		printf("Error\nFailed to load texture: %s\n", path);
 		return (false);
 	}
 	texture->addr = mlx_get_data_addr(texture->img,
-			&texture->bits_per_pixel,
-			&texture->line_length, &texture->endian);
+			&texture->bits_per_pixel, &texture->line_length,
+			&texture->endian);
+	if (!texture->addr)
+	{
+		printf("Error\nFailed to get texture data: %s\n", path);
+		mlx_destroy_image(data->mlx, texture->img);
+		texture->img = NULL;
+		return (false);
+	}
 	return (true);
 }
 
@@ -60,6 +67,8 @@ int	get_texture_color(t_img *texture, int x, int y)
 {
 	char	*dst;
 
+	if (!texture || !texture->addr)
+		return (0);
 	if (x < 0 || x >= texture->width || y < 0 || y >= texture->height)
 		return (0);
 	dst = texture->addr + (y * texture->line_length

@@ -6,7 +6,7 @@
 /*   By: lbolens <lbolens@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 16:19:07 by lbolens           #+#    #+#             */
-/*   Updated: 2025/10/27 13:27:26 by lbolens          ###   ########.fr       */
+/*   Updated: 2025/12/17 14:00:00 by lbolens          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,26 @@ static bool	is_valid_number(char *str)
 	return (true);
 }
 
+static bool	validate_rgb_values(char **split, int *rgb)
+{
+	int	j;
+
+	j = 0;
+	while (j < 3)
+	{
+		if (!is_valid_number(split[j]))
+			return (printf("Error\nInvalid RGB value\n"), false);
+		rgb[j] = ft_atoi(split[j]);
+		if (rgb[j] < 0 || rgb[j] > 255)
+			return (printf("Error\nRGB must be [0,255]\n"), false);
+		j++;
+	}
+	return (true);
+}
+
 static bool	extract_rgb(char *line, int *rgb)
 {
 	int		i;
-	int		j;
 	char	**split;
 
 	i = 0;
@@ -67,17 +83,14 @@ static bool	extract_rgb(char *line, int *rgb)
 		i++;
 	split = ft_split(&line[i], ',');
 	if (!split || !split[0] || !split[1] || !split[2] || split[3])
-		return (free_split(split), printf("Error: invalid RGB format\n"), false);
-	j = -1;
-	while (++j < 3)
 	{
-		if (!is_valid_number(split[j]))
-			return (free_split(split), printf("Error: invalid RGB value\n"),
-				false);
-		rgb[j] = ft_atoi(split[j]);
-		if (rgb[j] < 0 || rgb[j] > 255)
-			return (free_split(split), printf("Error: RGB must be [0,255]\n"),
-				false);
+		free_split(split);
+		return (printf("Error\nInvalid RGB format\n"), false);
+	}
+	if (!validate_rgb_values(split, rgb))
+	{
+		free_split(split);
+		return (false);
 	}
 	free_split(split);
 	return (true);
@@ -93,30 +106,30 @@ static void	init_colors_data(t_data *data)
 	data->ceiling_color[2] = -1;
 }
 
-static int	check_and_store_color(char *line, t_data *data, int *count,
-		int index)
+static bool	check_and_store_color(char *line, t_data *data,
+		int *count, int index)
 {
 	int	*color;
 
 	count[index]++;
 	if (count[index] > 1)
-		return (printf("Error: color defined multiple times\n"), 0);
+		return (printf("Error\nColor defined multiple times\n"), false);
 	if (index == 0)
 		color = data->floor_color;
 	else
 		color = data->ceiling_color;
 	if (!extract_rgb(line, color))
-		return (0);
-	return (1);
+		return (false);
+	return (true);
 }
 
-static int	parse_color_line(char *line, t_data *data, int *count)
+static bool	parse_color_line(char *line, t_data *data, int *count)
 {
 	if (ft_strncmp(line, "F ", 2) == 0)
 		return (check_and_store_color(line, data, count, 0));
 	else if (ft_strncmp(line, "C ", 2) == 0)
 		return (check_and_store_color(line, data, count, 1));
-	return (1);
+	return (true);
 }
 
 bool	get_colors(char **file, t_data *data)
@@ -136,6 +149,6 @@ bool	get_colors(char **file, t_data *data)
 			return (false);
 	}
 	if (count[0] != 1 || count[1] != 1)
-		return (printf("Error: missing color(s)\n"), false);
+		return (printf("Error\nMissing color(s)\n"), false);
 	return (true);
 }

@@ -6,13 +6,13 @@
 /*   By: alvanaut <alvanaut@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 00:00:00 by alvanaut          #+#    #+#             */
-/*   Updated: 2025/11/26 00:00:00 by alvanaut         ###   ########.fr       */
+/*   Updated: 2025/12/17 14:00:00 by alvanaut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 
-static void	init_ray(t_data *data, t_ray *ray, int x)
+void	init_ray(t_data *data, t_ray *ray, int x)
 {
 	ray->camera_x = 2 * x / (double)WIN_WIDTH - 1;
 	ray->dir_x = data->player.dir_x + data->player.plane_x * ray->camera_x;
@@ -30,7 +30,7 @@ static void	init_ray(t_data *data, t_ray *ray, int x)
 	ray->hit = 0;
 }
 
-static void	set_step_and_side_dist(t_data *data, t_ray *ray)
+static void	set_step_x(t_data *data, t_ray *ray)
 {
 	if (ray->dir_x < 0)
 	{
@@ -44,6 +44,10 @@ static void	set_step_and_side_dist(t_data *data, t_ray *ray)
 		ray->side_dist_x = (ray->map_x + 1.0 - data->player.pos_x)
 			* ray->delta_dist_x;
 	}
+}
+
+static void	set_step_y(t_data *data, t_ray *ray)
+{
 	if (ray->dir_y < 0)
 	{
 		ray->step_y = -1;
@@ -58,22 +62,27 @@ static void	set_step_and_side_dist(t_data *data, t_ray *ray)
 	}
 }
 
+static void	perform_dda_step(t_ray *ray)
+{
+	if (ray->side_dist_x < ray->side_dist_y)
+	{
+		ray->side_dist_x += ray->delta_dist_x;
+		ray->map_x += ray->step_x;
+		ray->side = 0;
+	}
+	else
+	{
+		ray->side_dist_y += ray->delta_dist_y;
+		ray->map_y += ray->step_y;
+		ray->side = 1;
+	}
+}
+
 static void	perform_dda_loop(t_data *data, t_ray *ray)
 {
 	while (ray->hit == 0)
 	{
-		if (ray->side_dist_x < ray->side_dist_y)
-		{
-			ray->side_dist_x += ray->delta_dist_x;
-			ray->map_x += ray->step_x;
-			ray->side = 0;
-		}
-		else
-		{
-			ray->side_dist_y += ray->delta_dist_y;
-			ray->map_y += ray->step_y;
-			ray->side = 1;
-		}
+		perform_dda_step(ray);
 		if (ray->map_y < 0 || ray->map_y >= data->map_height
 			|| ray->map_x < 0 || ray->map_x >= data->map_width)
 		{
@@ -85,11 +94,8 @@ static void	perform_dda_loop(t_data *data, t_ray *ray)
 	}
 }
 
-void	perform_dda(t_data *data, t_ray *ray)
+static void	calculate_wall_distance(t_data *data, t_ray *ray)
 {
-	init_ray(data, ray, ray->camera_x);
-	set_step_and_side_dist(data, ray);
-	perform_dda_loop(data, ray);
 	if (ray->side == 0)
 		ray->perp_wall_dist = (ray->map_x - data->player.pos_x
 				+ (1 - ray->step_x) / 2) / ray->dir_x;
@@ -103,4 +109,12 @@ void	perform_dda(t_data *data, t_ray *ray)
 	ray->draw_end = ray->line_height / 2 + WIN_HEIGHT / 2;
 	if (ray->draw_end >= WIN_HEIGHT)
 		ray->draw_end = WIN_HEIGHT - 1;
+}
+
+void	perform_dda(t_data *data, t_ray *ray)
+{
+	set_step_x(data, ray);
+	set_step_y(data, ray);
+	perform_dda_loop(data, ray);
+	calculate_wall_distance(data, ray);
 }

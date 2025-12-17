@@ -6,7 +6,7 @@
 /*   By: lbolens <lbolens@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 15:40:50 by lbolens           #+#    #+#             */
-/*   Updated: 2025/10/27 13:27:27 by lbolens          ###   ########.fr       */
+/*   Updated: 2025/12/17 14:00:00 by lbolens          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ static bool	check_file_syntax(char *str)
 	len = ft_strlen(str);
 	if (len < 5)
 	{
-		printf("Error: filename too short\n");
+		printf("Error\nFilename too short\n");
 		return (false);
 	}
 	if (ft_strcmp(&str[len - 4], ".cub") != 0)
 	{
-		printf("Error: file must end with .cub\n");
+		printf("Error\nFile must end with .cub\n");
 		return (false);
 	}
 	return (true);
@@ -40,13 +40,25 @@ static size_t	get_map_size(char *file)
 	if (fd < 0)
 		return (0);
 	file_size = 0;
-	while ((line = get_next_line(fd)) != NULL)
+	line = get_next_line(fd);
+	while (line != NULL)
 	{
 		free(line);
 		file_size++;
+		line = get_next_line(fd);
 	}
 	close(fd);
 	return (file_size);
+}
+
+static char	**allocate_file_array(int map_size)
+{
+	char	**file;
+
+	file = malloc((map_size + 1) * sizeof(char *));
+	if (!file)
+		return (NULL);
+	return (file);
 }
 
 static char	**read_file(char *file)
@@ -63,15 +75,16 @@ static char	**read_file(char *file)
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
 		return (NULL);
-	_file = malloc((map_size + 1) * sizeof(char *));
+	_file = allocate_file_array(map_size);
 	if (!_file)
-	{
-		close(fd);
-		return (NULL);
-	}
+		return (close(fd), NULL);
 	i = 0;
-	while ((line = get_next_line(fd)) != NULL)
+	line = get_next_line(fd);
+	while (line != NULL)
+	{
 		_file[i++] = line;
+		line = get_next_line(fd);
+	}
 	_file[i] = NULL;
 	close(fd);
 	return (_file);
@@ -86,7 +99,7 @@ char	**manage_file(char *file)
 	_file = read_file(file);
 	if (!_file)
 	{
-		printf("Error: couldn't import file.\n");
+		printf("Error\nCouldn't import file\n");
 		return (NULL);
 	}
 	return (_file);

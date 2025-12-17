@@ -6,7 +6,7 @@
 /*   By: lbolens <lbolens@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 12:14:01 by lbolens           #+#    #+#             */
-/*   Updated: 2025/10/27 13:27:23 by lbolens          ###   ########.fr       */
+/*   Updated: 2025/12/17 14:00:00 by lbolens          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,38 +37,34 @@ static char	**duplicate_map(char **map, int height)
 	return (copy);
 }
 
-static void	free_map_copy(char **map)
+static bool	is_walkable(char c)
 {
-	int	i;
-
-	if (!map)
-		return ;
-	i = 0;
-	while (map[i])
-	{
-		free(map[i]);
-		i++;
-	}
-	free(map);
+	return (c == '0' || c == 'N' || c == 'S' || c == 'E' || c == 'W');
 }
 
-static bool	fill(char **map, int x, int y, t_data *data)
+static bool	is_out_of_bounds(char **map, int x, int y, t_data *data)
 {
 	int	len;
 
 	if (y < 0 || y >= data->map_height)
-		return (false);
+		return (true);
 	len = ft_strlen(map[y]);
 	if (len > 0 && map[y][len - 1] == '\n')
 		len--;
 	if (x < 0 || x >= len)
-		return (false);
+		return (true);
 	if (map[y][x] == ' ')
+		return (true);
+	return (false);
+}
+
+static bool	fill(char **map, int x, int y, t_data *data)
+{
+	if (is_out_of_bounds(map, x, y, data))
 		return (false);
 	if (map[y][x] == '1' || map[y][x] == 'V')
 		return (true);
-	if (map[y][x] != '0' && map[y][x] != 'N' && map[y][x] != 'S'
-		&& map[y][x] != 'E' && map[y][x] != 'W')
+	if (!is_walkable(map[y][x]))
 		return (false);
 	map[y][x] = 'V';
 	if (!fill(map, x + 1, y, data))
@@ -89,10 +85,10 @@ bool	flood_fill(t_data *data)
 
 	map_copy = duplicate_map(data->map, data->map_height);
 	if (!map_copy)
-		return (printf("Error: malloc failed in flood_fill\n"), false);
+		return (printf("Error\nMalloc failed in flood_fill\n"), false);
 	result = fill(map_copy, data->player_x, data->player_y, data);
-	free_map_copy(map_copy);
+	free_map_array(map_copy);
 	if (!result)
-		printf("Error: map is not closed (flood fill failed)\n");
+		printf("Error\nMap is not closed (flood fill failed)\n");
 	return (result);
 }

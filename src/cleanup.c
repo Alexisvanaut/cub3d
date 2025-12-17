@@ -6,54 +6,87 @@
 /*   By: alvanaut <alvanaut@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 00:00:00 by alvanaut          #+#    #+#             */
-/*   Updated: 2025/11/26 00:00:00 by alvanaut         ###   ########.fr       */
+/*   Updated: 2025/12/17 14:00:00 by alvanaut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 
-static void	free_textures(t_data *data)
+void	free_textures_paths(t_data *data)
+{
+	if (data->north_texture)
+	{
+		free(data->north_texture);
+		data->north_texture = NULL;
+	}
+	if (data->south_texture)
+	{
+		free(data->south_texture);
+		data->south_texture = NULL;
+	}
+	if (data->west_texture)
+	{
+		free(data->west_texture);
+		data->west_texture = NULL;
+	}
+	if (data->east_texture)
+	{
+		free(data->east_texture);
+		data->east_texture = NULL;
+	}
+}
+
+static void	free_texture_images(t_data *data)
 {
 	int	i;
 
-	if (data->north_texture)
-		free(data->north_texture);
-	if (data->south_texture)
-		free(data->south_texture);
-	if (data->west_texture)
-		free(data->west_texture);
-	if (data->east_texture)
-		free(data->east_texture);
 	i = 0;
 	while (i < 4)
 	{
 		if (data->textures[i].img)
+		{
 			mlx_destroy_image(data->mlx, data->textures[i].img);
+			data->textures[i].img = NULL;
+		}
 		i++;
 	}
 }
 
-static void	free_map(t_data *data)
+void	free_map_array(char **map)
 {
 	int	i;
 
-	if (!data->map)
+	if (!map)
 		return ;
 	i = 0;
-	while (data->map[i])
+	while (map[i])
 	{
-		free(data->map[i]);
+		free(map[i]);
 		i++;
 	}
-	free(data->map);
+	free(map);
 }
 
 void	cleanup(t_data *data)
 {
-	free_textures(data);
-	free_map(data);
+	free_textures_paths(data);
+	free_texture_images(data);
+	free_map_array(data->map);
+	data->map = NULL;
 	if (data->img.img)
+	{
 		mlx_destroy_image(data->mlx, data->img.img);
+		data->img.img = NULL;
+	}
 	if (data->win)
+	{
 		mlx_destroy_window(data->mlx, data->win);
+		data->win = NULL;
+	}
+	if (data->mlx)
+	{
+		mlx_destroy_display(data->mlx);
+		free(data->mlx);
+		data->mlx = NULL;
+	}
 }

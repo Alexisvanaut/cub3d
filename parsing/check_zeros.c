@@ -6,7 +6,7 @@
 /*   By: lbolens <lbolens@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 13:23:02 by lbolens           #+#    #+#             */
-/*   Updated: 2025/10/27 13:27:22 by lbolens          ###   ########.fr       */
+/*   Updated: 2025/12/17 14:00:00 by lbolens          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,24 @@ static bool	is_valid_neighbor(char **map, int x, int y, int max_y)
 	return (true);
 }
 
+static bool	is_walkable_tile(char c)
+{
+	return (c == '0' || c == 'N' || c == 'S' || c == 'E' || c == 'W');
+}
+
+static bool	check_tile_neighbors(char **map, int x, int y, int map_height)
+{
+	if (!is_valid_neighbor(map, x + 1, y, map_height))
+		return (printf("Error\n0 adjacent to space/border\n"), false);
+	if (!is_valid_neighbor(map, x - 1, y, map_height))
+		return (printf("Error\n0 adjacent to space/border\n"), false);
+	if (!is_valid_neighbor(map, x, y + 1, map_height))
+		return (printf("Error\n0 adjacent to space/border\n"), false);
+	if (!is_valid_neighbor(map, x, y - 1, map_height))
+		return (printf("Error\n0 adjacent to space/border\n"), false);
+	return (true);
+}
+
 bool	check_zeros(char **map)
 {
 	int	i;
@@ -41,21 +59,10 @@ bool	check_zeros(char **map)
 		j = 0;
 		while (map[i][j] && map[i][j] != '\n')
 		{
-			if (map[i][j] == '0' || map[i][j] == 'N' || map[i][j] == 'S'
-				|| map[i][j] == 'E' || map[i][j] == 'W')
+			if (is_walkable_tile(map[i][j]))
 			{
-				if (!is_valid_neighbor(map, j + 1, i, map_height))
-					return (printf("Error: 0 adjacent to space/border\n"),
-						false);
-				if (!is_valid_neighbor(map, j - 1, i, map_height))
-					return (printf("Error: 0 adjacent to space/border\n"),
-						false);
-				if (!is_valid_neighbor(map, j, i + 1, map_height))
-					return (printf("Error: 0 adjacent to space/border\n"),
-						false);
-				if (!is_valid_neighbor(map, j, i - 1, map_height))
-					return (printf("Error: 0 adjacent to space/border\n"),
-						false);
+				if (!check_tile_neighbors(map, j, i, map_height))
+					return (false);
 			}
 			j++;
 		}

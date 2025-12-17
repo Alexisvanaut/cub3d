@@ -20,6 +20,12 @@
 # define MOVE_SPEED 0.1
 # define ROT_SPEED 0.05
 
+// Collision settings
+# define COLLISION_MARGIN 0.2
+
+// FOV settings
+# define FOV_PLANE 0.66
+
 // Key codes (Linux)
 # define KEY_ESC 65307
 # define KEY_W 119
@@ -96,15 +102,24 @@ typedef struct s_data
 	char		player_dir;
 	int			player_x;
 	int			player_y;
+	bool		needs_render;
 }				t_data;
 
-// PARSING
+// PARSING - File management
 char		**manage_file(char *file);
+
+// PARSING - Textures
 bool		get_textures(char **file, t_data *data);
+
+// PARSING - Colors
 bool		get_colors(char **file, t_data *data);
+
+// PARSING - Map
 bool		get_map(t_data *data, char **file);
 bool		parse_map(t_data *data, char **map);
 int			get_map_height(char **map);
+
+// PARSING - Validation
 char		*skip_spaces(char *str);
 bool		check_lines(char **map);
 bool		check_rows(char **map);
@@ -123,6 +138,7 @@ int			get_texture_color(t_img *texture, int x, int y);
 
 // GRAPHICS - Raycasting
 void		perform_dda(t_data *data, t_ray *ray);
+void		init_ray(t_data *data, t_ray *ray, int x);
 
 // GRAPHICS - Render
 void		my_mlx_pixel_put(t_img *img, int x, int y, int color);
@@ -132,8 +148,11 @@ void		render_frame(t_data *data);
 // GRAPHICS - Controls
 int			handle_keypress(int keycode, t_data *data);
 int			handle_close(t_data *data);
+bool		is_valid_move(t_data *data, double new_x, double new_y);
 
 // GRAPHICS - Cleanup
 void		cleanup(t_data *data);
+void		free_map_array(char **map);
+void		free_textures_paths(t_data *data);
 
 #endif

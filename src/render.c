@@ -6,7 +6,7 @@
 /*   By: alvanaut <alvanaut@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 00:00:00 by alvanaut          #+#    #+#             */
-/*   Updated: 2025/11/26 00:00:00 by alvanaut         ###   ########.fr       */
+/*   Updated: 2025/12/17 14:00:00 by alvanaut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,31 +40,37 @@ static int	get_wall_texture_index(t_ray *ray)
 	}
 }
 
+static void	calculate_texture_params(t_data *data, t_ray *ray,
+		int *tex_x, t_img *texture)
+{
+	double	wall_x;
+
+	if (ray->side == 0)
+		wall_x = data->player.pos_y + ray->perp_wall_dist * ray->dir_y;
+	else
+		wall_x = data->player.pos_x + ray->perp_wall_dist * ray->dir_x;
+	wall_x -= floor(wall_x);
+	*tex_x = (int)(wall_x * (double)texture->width);
+	if ((ray->side == 0 && ray->dir_x > 0)
+		|| (ray->side == 1 && ray->dir_y < 0))
+		*tex_x = texture->width - *tex_x - 1;
+}
+
 static void	draw_textured_line(t_data *data, int x, t_ray *ray)
 {
 	int		y;
 	int		tex_x;
 	int		tex_y;
 	int		color;
-	double	wall_x;
 	double	step;
 	double	tex_pos;
-	int		tex_index;
 	t_img	*texture;
 
-	tex_index = get_wall_texture_index(ray);
-	texture = &data->textures[tex_index];
-	if (ray->side == 0)
-		wall_x = data->player.pos_y + ray->perp_wall_dist * ray->dir_y;
-	else
-		wall_x = data->player.pos_x + ray->perp_wall_dist * ray->dir_x;
-	wall_x -= floor(wall_x);
-	tex_x = (int)(wall_x * (double)texture->width);
-	if ((ray->side == 0 && ray->dir_x > 0)
-		|| (ray->side == 1 && ray->dir_y < 0))
-		tex_x = texture->width - tex_x - 1;
+	texture = &data->textures[get_wall_texture_index(ray)];
+	calculate_texture_params(data, ray, &tex_x, texture);
 	step = 1.0 * texture->height / ray->line_height;
-	tex_pos = (ray->draw_start - WIN_HEIGHT / 2 + ray->line_height / 2) * step;
+	tex_pos = (ray->draw_start - WIN_HEIGHT / 2
+			+ ray->line_height / 2) * step;
 	y = ray->draw_start;
 	while (y < ray->draw_end)
 	{
@@ -76,7 +82,8 @@ static void	draw_textured_line(t_data *data, int x, t_ray *ray)
 	}
 }
 
-static void	draw_floor_ceiling(t_data *data, int x, int draw_start, int draw_end)
+static void	draw_floor_ceiling(t_data *data, int x,
+		int draw_start, int draw_end)
 {
 	int	y;
 	int	ceiling_color;
@@ -88,16 +95,10 @@ static void	draw_floor_ceiling(t_data *data, int x, int draw_start, int draw_end
 		| (data->floor_color[1] << 8) | data->floor_color[2];
 	y = 0;
 	while (y < draw_start)
-	{
-		my_mlx_pixel_put(&data->img, x, y, ceiling_color);
-		y++;
-	}
+		my_mlx_pixel_put(&data->img, x, y++, ceiling_color);
 	y = draw_end;
 	while (y < WIN_HEIGHT)
-	{
-		my_mlx_pixel_put(&data->img, x, y, floor_color);
-		y++;
-	}
+		my_mlx_pixel_put(&data->img, x, y++, floor_color);
 }
 
 void	draw_vertical_line(t_data *data, int x, t_ray *ray)
@@ -114,7 +115,7 @@ void	render_frame(t_data *data)
 	x = 0;
 	while (x < WIN_WIDTH)
 	{
-		ray.camera_x = x;
+		init_ray(data, &ray, x);
 		perform_dda(data, &ray);
 		draw_vertical_line(data, x, &ray);
 		x++;
