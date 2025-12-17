@@ -12,11 +12,46 @@
 
 #include "../includes/cub3d.h"
 
-static char	*skip_spaces(char *str)
+char	*skip_spaces(char *str)
 {
 	while (*str == ' ' || *str == '\t')
 		str++;
 	return (str);
+}
+
+static void	free_split(char **split)
+{
+	int	i;
+
+	if (!split)
+		return ;
+	i = 0;
+	while (split[i])
+	{
+		free(split[i]);
+		i++;
+	}
+	free(split);
+}
+
+static bool	is_valid_number(char *str)
+{
+	int	i;
+
+	if (!str || !*str)
+		return (false);
+	i = 0;
+	while (str[i] == ' ' || str[i] == '\t')
+		i++;
+	if (!str[i])
+		return (false);
+	while (str[i] && str[i] != ' ' && str[i] != '\t' && str[i] != '\n')
+	{
+		if (!ft_isdigit(str[i]))
+			return (false);
+		i++;
+	}
+	return (true);
 }
 
 static bool	extract_rgb(char *line, int *rgb)
@@ -32,17 +67,19 @@ static bool	extract_rgb(char *line, int *rgb)
 		i++;
 	split = ft_split(&line[i], ',');
 	if (!split || !split[0] || !split[1] || !split[2] || split[3])
-		return (printf("Error: invalid RGB format\n"), false);
+		return (free_split(split), printf("Error: invalid RGB format\n"), false);
 	j = -1;
 	while (++j < 3)
 	{
+		if (!is_valid_number(split[j]))
+			return (free_split(split), printf("Error: invalid RGB value\n"),
+				false);
 		rgb[j] = ft_atoi(split[j]);
 		if (rgb[j] < 0 || rgb[j] > 255)
-			return (printf("Error: RGB value must be [0,255]\n"),
-				free(split[j]), free(split), false);
-		free(split[j]);
+			return (free_split(split), printf("Error: RGB must be [0,255]\n"),
+				false);
 	}
-	free(split);
+	free_split(split);
 	return (true);
 }
 

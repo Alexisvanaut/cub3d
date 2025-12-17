@@ -28,16 +28,6 @@ static bool	is_valid_neighbor(char **map, int x, int y, int max_y)
 	return (true);
 }
 
-static int	get_map_height(char **map)
-{
-	int	i;
-
-	i = 0;
-	while (map[i])
-		i++;
-	return (i);
-}
-
 bool	check_zeros(char **map)
 {
 	int	i;

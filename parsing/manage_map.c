@@ -32,7 +32,7 @@ static int	get_map_width(char **map)
 	return (max_width);
 }
 
-static int	get_map_height(char **map)
+int	get_map_height(char **map)
 {
 	int	i;
 
@@ -40,6 +40,33 @@ static int	get_map_height(char **map)
 	while (map[i])
 		i++;
 	return (i);
+}
+
+static void	free_partial_map(char **map, int count)
+{
+	int	i;
+
+	i = 0;
+	while (i < count)
+	{
+		free(map[i]);
+		i++;
+	}
+	free(map);
+}
+
+static bool	is_empty_line(char *line)
+{
+	int	i;
+
+	i = 0;
+	while (line[i])
+	{
+		if (line[i] != ' ' && line[i] != '\t' && line[i] != '\n')
+			return (false);
+		i++;
+	}
+	return (true);
 }
 
 static char	**extract_map(char **file, int start_index)
@@ -65,7 +92,7 @@ static char	**extract_map(char **file, int start_index)
 	{
 		map[j] = ft_strdup(file[i]);
 		if (!map[j])
-			return (NULL);
+			return (free_partial_map(map, j), NULL);
 		i++;
 		j++;
 	}
@@ -84,11 +111,38 @@ static int	find_map_start(char **file)
 		j = 0;
 		while ((file[i][j] == ' ' || file[i][j] == '\t') && file[i][j])
 			j++;
-		if (ft_isdigit(file[i][j]) || file[i][j] == '1')
+		if (file[i][j] == '0' || file[i][j] == '1')
 			return (i);
 		i++;
 	}
 	return (-1);
+}
+
+static bool	check_empty_lines(char **map)
+{
+	int	i;
+
+	i = 0;
+	while (map[i])
+	{
+		if (is_empty_line(map[i]))
+			return (printf("Error: empty line in map\n"), false);
+		i++;
+	}
+	return (true);
+}
+
+static void	free_map(char **map)
+{
+	int	i;
+
+	i = 0;
+	while (map[i])
+	{
+		free(map[i]);
+		i++;
+	}
+	free(map);
 }
 
 bool	get_map(t_data *data, char **file)
@@ -102,6 +156,8 @@ bool	get_map(t_data *data, char **file)
 	map = extract_map(file, start_index);
 	if (!map)
 		return (false);
+	if (!check_empty_lines(map))
+		return (free_map(map), false);
 	data->map = map;
 	data->map_height = get_map_height(map);
 	data->map_width = get_map_width(map);

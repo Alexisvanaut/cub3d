@@ -12,13 +12,6 @@
 
 #include "../includes/cub3d.h"
 
-static char	*skip_spaces(char *str)
-{
-	while (*str == ' ' || *str == '\t')
-		str++;
-	return (str);
-}
-
 static char	*extract_path(char *line)
 {
 	int		i;
@@ -64,6 +57,18 @@ static void	init_textures_data(t_data *data)
 	data->east_texture = NULL;
 }
 
+static bool	check_xpm_extension(char *path)
+{
+	int	len;
+
+	len = ft_strlen(path);
+	if (len < 4)
+		return (false);
+	if (ft_strcmp(&path[len - 4], ".xpm") != 0)
+		return (false);
+	return (true);
+}
+
 static int	check_and_store_texture(char *line, t_data *data, int *count,
 		int index)
 {
@@ -79,6 +84,12 @@ static int	check_and_store_texture(char *line, t_data *data, int *count,
 	path = extract_path(line);
 	if (!path)
 		return (0);
+	if (!check_xpm_extension(path))
+	{
+		printf("Error: texture must be .xpm file: %s\n", path);
+		free(path);
+		return (0);
+	}
 	if (index == 0)
 		data->north_texture = path;
 	else if (index == 1)

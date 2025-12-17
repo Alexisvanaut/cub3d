@@ -110,8 +110,8 @@ bool	check_rows(char **map)
 
 bool	check_lines(char **map)
 {
-	int i;
-	int len;
+	int	i;
+	int	len;
 
 	i = 0;
 	while (map[i])

@@ -26,7 +26,9 @@
 #  define BUFFER_SIZE 1000
 # endif
 
-# define OPEN_MAX 4024
+# ifndef OPEN_MAX
+#  define OPEN_MAX 4024
+# endif
 
 typedef struct s_fd_data
 {
