@@ -6,36 +6,11 @@
 /*   By: lbolens <lbolens@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 15:51:56 by lbolens           #+#    #+#             */
-/*   Updated: 2025/10/27 13:27:29 by lbolens          ###   ########.fr       */
+/*   Updated: 2025/12/18 16:46:00 by lbolens          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
-
-static char	*extract_path(char *line)
-{
-	int		i;
-	int		j;
-	int		k;
-	char	*path;
-
-	i = 0;
-	while (line[i] && line[i] != ' ')
-		i++;
-	while (line[i] == ' ' || line[i] == '\t')
-		i++;
-	j = i;
-	while (line[j] && line[j] != ' ' && line[j] != '\n' && line[j] != '\t')
-		j++;
-	path = malloc(sizeof(char) * (j - i + 1));
-	if (!path)
-		return (NULL);
-	k = 0;
-	while (i < j)
-		path[k++] = line[i++];
-	path[k] = '\0';
-	return (path);
-}
 
 static bool	check_xpm_extension(char *path)
 {

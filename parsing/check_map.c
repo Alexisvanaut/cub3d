@@ -6,19 +6,11 @@
 /*   By: lbolens <lbolens@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 13:23:50 by lbolens           #+#    #+#             */
-/*   Updated: 2025/10/27 13:29:29 by lbolens          ###   ########.fr       */
+/*   Updated: 2025/12/18 16:46:00 by lbolens          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
-
-static bool	check_char_valid(char c)
-{
-	if (c != '0' && c != '1' && c != 'N' && c != 'S'
-		&& c != 'E' && c != 'W' && c != ' ' && c != '\n')
-		return (false);
-	return (true);
-}
 
 static void	print_forbidden_char(char c)
 {
@@ -79,7 +71,7 @@ bool	check_one_player(t_data *data, char **map)
 			if (is_player_char(map[i][j]))
 			{
 				if (found)
-					return (ft_putstr_fd("Error: multiple players\n", 2), false);
+					return (ft_putstr_fd("Error: many players\n", 2), false);
 				handle_player_found(data, map, i, j);
 				found = true;
 			}

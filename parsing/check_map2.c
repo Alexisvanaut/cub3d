@@ -6,7 +6,7 @@
 /*   By: lbolens <lbolens@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 13:23:50 by lbolens           #+#    #+#             */
-/*   Updated: 2025/10/27 13:29:29 by lbolens          ###   ########.fr       */
+/*   Updated: 2025/12/18 16:46:00 by lbolens          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ bool	check_lines(char **map)
 		if (len > 0 && map[i][len - 1] == '\n')
 			len--;
 		if (len > 0 && map[i][0] != '1' && map[i][0] != ' ')
-			return (ft_putstr_fd("Error: first column must be walls or spaces\n",
+			return (ft_putstr_fd("Error: first column not walls or spaces\n",
 					2), false);
 		if (len > 0 && map[i][len - 1] != '1' && map[i][len - 1] != ' ')
 			return (ft_putstr_fd("Error: last column must be walls or spaces\n",

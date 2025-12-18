@@ -6,7 +6,7 @@
 /*   By: lbolens <lbolens@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 16:19:07 by lbolens           #+#    #+#             */
-/*   Updated: 2025/12/17 14:00:00 by lbolens          ###   ########.fr       */
+/*   Updated: 2025/12/18 16:46:00 by lbolens          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ bool	check_and_store_color(char *line, t_data *data, int *count, int index)
 
 	count[index]++;
 	if (count[index] > 1)
-		return (ft_putstr_fd("Error\nColor defined multiple times\n", 2), false);
+		return (ft_putstr_fd("Error\nColor defined many times\n", 2), false);
 	if (index == 0)
 		color = data->floor_color;
 	else

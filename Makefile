@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lucasbolens <lucasbolens@student.42.fr>    +#+  +:+       +#+         #
+#    By: lbolens <lbolens@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/26 00:00:00 by alvanaut          #+#    #+#              #
-#    Updated: 2025/12/18 16:35:41 by lucasbolens      ###   ########.fr        #
+#    Updated: 2025/12/18 16:45:03 by lbolens          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,10 +27,10 @@ NC			= \033[0m
 # Source files
 SRC_FILES	= main.c init.c textures.c raycasting.c render.c controls.c \
 			  cleanup.c move.c set_step.c draw.c
-PARSE_FILES	= check_map.c check_map2.c check_zeros.c flood_fill.c \
+PARSE_FILES	= check_map.c check_map2.c check_map3.c check_zeros.c flood_fill.c \
 			  manage_colors.c manage_colors2.c manage_file.c \
 			  manage_map.c manage_map2.c manage_texture.c \
-			  manage_texture2.c parse_map.c main_parsing.c
+			  manage_texture2.c manage_texture3.c parse_map.c main_parsing.c
 
 SRCS		= $(addprefix $(SRCDIR)/, $(SRC_FILES)) \
 			  $(addprefix $(PARSEDIR)/, $(PARSE_FILES))

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alvanaut < alvanaut@student.s19.be >       +#+  +:+       +#+        */
+/*   By: lbolens <lbolens@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 16:15:18 by alvanaut          #+#    #+#             */
-/*   Updated: 2025/12/18 16:26:08 by alvanaut         ###   ########.fr       */
+/*   Updated: 2025/12/18 16:46:14 by lbolens          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,7 @@ bool		check_one_player(t_data *data, char **map);
 bool		check_characters(char **map);
 bool		check_zeros(char **map);
 bool		flood_fill(t_data *data);
+bool		check_char_valid(char c);
 
 // PARSING - Colors utils
 bool		check_and_store_color(char *line, t_data *data,
@@ -163,6 +164,7 @@ void		free_textures_data(t_data *data);
 int			check_and_store_texture(char *line, t_data *data,
 				int *count, int index);
 bool		open_textures(t_data *data);
+char		*extract_path(char *line);
 
 // GRAPHICS - Init
 bool		init_mlx(t_data *data);
