@@ -12,6 +12,21 @@
 
 #include "../includes/cub3d.h"
 
+static bool	check_char_valid(char c)
+{
+	if (c != '0' && c != '1' && c != 'N' && c != 'S'
+		&& c != 'E' && c != 'W' && c != ' ' && c != '\n')
+		return (false);
+	return (true);
+}
+
+static void	print_forbidden_char(char c)
+{
+	ft_putstr_fd("Error: forbiden character found <", 2);
+	ft_putchar_fd(c, 2);
+	ft_putstr_fd(">\n", 2);
+}
+
 bool	check_characters(char **map)
 {
 	int	i;
@@ -23,11 +38,9 @@ bool	check_characters(char **map)
 		j = 0;
 		while (map[i][j])
 		{
-			if (map[i][j] != '0' && map[i][j] != '1' && map[i][j] != 'N'
-				&& map[i][j] != 'S' && map[i][j] != 'E' && map[i][j] != 'W'
-				&& map[i][j] != ' ' && map[i][j] != '\n')
+			if (!check_char_valid(map[i][j]))
 			{
-				printf("Error: forbiden character found <%c>\n", map[i][j]);
+				print_forbidden_char(map[i][j]);
 				return (false);
 			}
 			j++;
@@ -37,99 +50,42 @@ bool	check_characters(char **map)
 	return (true);
 }
 
+static bool	is_player_char(char c)
+{
+	return (c == 'N' || c == 'S' || c == 'E' || c == 'W');
+}
+
+static bool	handle_player_found(t_data *data, char **map, int i, int j)
+{
+	data->player_dir = map[i][j];
+	data->player_x = j;
+	data->player_y = i;
+	return (true);
+}
+
 bool	check_one_player(t_data *data, char **map)
 {
 	int		i;
 	int		j;
-	bool	already_checked;
+	bool	found;
 
-	i = 0;
-	already_checked = false;
-	while (map[i])
+	i = -1;
+	found = false;
+	while (map[++i])
 	{
-		j = 0;
-		while (map[i][j])
+		j = -1;
+		while (map[i][++j])
 		{
-			if (map[i][j] == 'N' || map[i][j] == 'S' || map[i][j] == 'E'
-				|| map[i][j] == 'W')
+			if (is_player_char(map[i][j]))
 			{
-				if (already_checked)
-				{
-					printf("Error: multiple players\n");
-					return (false);
-				}
-				data->player_dir = map[i][j];
-				data->player_x = j;
-				data->player_y = i;
-				already_checked = true;
+				if (found)
+					return (ft_putstr_fd("Error: multiple players\n", 2), false);
+				handle_player_found(data, map, i, j);
+				found = true;
 			}
-			j++;
 		}
-		i++;
 	}
-	if (!already_checked)
-	{
-		printf("Error: zero player found\n");
-		return (false);
-	}
-	return (true);
-}
-
-bool	check_rows(char **map)
-{
-	int	i;
-	int	last_row;
-
-	last_row = 0;
-	while (map[last_row])
-		last_row++;
-	last_row--;
-	i = 0;
-	while (map[0][i])
-	{
-		if (map[0][i] != '1' && map[0][i] != ' ' && map[0][i] != '\n')
-		{
-			printf("Error: first row must be walls or spaces\n");
-			return (false);
-		}
-		i++;
-	}
-	i = 0;
-	while (map[last_row][i])
-	{
-		if (map[last_row][i] != '1' && map[last_row][i] != ' '
-			&& map[last_row][i] != '\n')
-		{
-			printf("Error: last row must be walls or spaces\n");
-			return (false);
-		}
-		i++;
-	}
-	return (true);
-}
-
-bool	check_lines(char **map)
-{
-	int	i;
-	int	len;
-
-	i = 0;
-	while (map[i])
-	{
-		len = ft_strlen(map[i]);
-		if (len > 0 && map[i][len - 1] == '\n')
-			len--;
-		if (len > 0 && map[i][0] != '1' && map[i][0] != ' ')
-		{
-			printf("Error: first column must be walls or spaces\n");
-			return (false);
-		}
-		if (len > 0 && map[i][len - 1] != '1' && map[i][len - 1] != ' ')
-		{
-			printf("Error: last column must be walls or spaces\n");
-			return (false);
-		}
-		i++;
-	}
+	if (!found)
+		return (ft_putstr_fd("Error: zero player found\n", 2), false);
 	return (true);
 }

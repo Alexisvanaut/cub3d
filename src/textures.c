@@ -18,7 +18,9 @@ static bool	load_single_texture(t_data *data, t_img *texture, char *path)
 			&texture->width, &texture->height);
 	if (!texture->img)
 	{
-		printf("Error\nFailed to load texture: %s\n", path);
+		ft_putstr_fd("Error\nFailed to load texture: ", 2);
+		ft_putstr_fd(path, 2);
+		ft_putstr_fd("\n", 2);
 		return (false);
 	}
 	texture->addr = mlx_get_data_addr(texture->img,
@@ -26,7 +28,9 @@ static bool	load_single_texture(t_data *data, t_img *texture, char *path)
 			&texture->endian);
 	if (!texture->addr)
 	{
-		printf("Error\nFailed to get texture data: %s\n", path);
+		ft_putstr_fd("Error\nFailed to get texture data: ", 2);
+		ft_putstr_fd(path, 2);
+		ft_putstr_fd("\n", 2);
 		mlx_destroy_image(data->mlx, texture->img);
 		texture->img = NULL;
 		return (false);

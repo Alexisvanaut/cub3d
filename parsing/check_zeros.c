@@ -36,13 +36,13 @@ static bool	is_walkable_tile(char c)
 static bool	check_tile_neighbors(char **map, int x, int y, int map_height)
 {
 	if (!is_valid_neighbor(map, x + 1, y, map_height))
-		return (printf("Error\n0 adjacent to space/border\n"), false);
+		return (ft_putstr_fd("Error\n0 adjacent to space/border\n", 2), false);
 	if (!is_valid_neighbor(map, x - 1, y, map_height))
-		return (printf("Error\n0 adjacent to space/border\n"), false);
+		return (ft_putstr_fd("Error\n0 adjacent to space/border\n", 2), false);
 	if (!is_valid_neighbor(map, x, y + 1, map_height))
-		return (printf("Error\n0 adjacent to space/border\n"), false);
+		return (ft_putstr_fd("Error\n0 adjacent to space/border\n", 2), false);
 	if (!is_valid_neighbor(map, x, y - 1, map_height))
-		return (printf("Error\n0 adjacent to space/border\n"), false);
+		return (ft_putstr_fd("Error\n0 adjacent to space/border\n", 2), false);
 	return (true);
 }
 

@@ -12,34 +12,33 @@
 
 #include "../includes/cub3d.h"
 
+static void	init_tex_vars(t_data *data, t_ray *ray, double *vars, t_img **tex)
+{
+	*tex = &data->textures[get_wall_texture_index(ray)];
+	calculate_texture_params(data, ray, (int *)&vars[0], *tex);
+	vars[1] = 1.0 * (*tex)->height / ray->line_height;
+	vars[2] = (ray->draw_start - WIN_HEIGHT / 2 + ray->line_height / 2)
+		* vars[1];
+}
+
 void	draw_textured_line(t_data *data, int x, t_ray *ray)
 {
 	int		y;
-	int		tex_x;
-	int		tex_y;
-	int		color;
-	double	step;
-	double	tex_pos;
+	double	vars[3];
 	t_img	*texture;
 
-	texture = &data->textures[get_wall_texture_index(ray)];
-	calculate_texture_params(data, ray, &tex_x, texture);
-	step = 1.0 * texture->height / ray->line_height;
-	tex_pos = (ray->draw_start - WIN_HEIGHT / 2
-			+ ray->line_height / 2) * step;
+	init_tex_vars(data, ray, vars, &texture);
 	y = ray->draw_start;
 	while (y < ray->draw_end)
 	{
-		tex_y = (int)tex_pos & (texture->height - 1);
-		tex_pos += step;
-		color = get_texture_color(texture, tex_x, tex_y);
-		my_mlx_pixel_put(&data->img, x, y, color);
+		my_mlx_pixel_put(&data->img, x, y, get_texture_color(texture,
+				(int)vars[0], (int)vars[2] & (texture->height - 1)));
+		vars[2] += vars[1];
 		y++;
 	}
 }
 
-void	draw_floor_ceiling(t_data *data, int x,
-		int draw_start, int draw_end)
+void	draw_floor_ceiling(t_data *data, int x, int draw_start, int draw_end)
 {
 	int	y;
 	int	ceiling_color;

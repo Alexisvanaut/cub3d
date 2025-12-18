@@ -128,6 +128,22 @@ bool		check_characters(char **map);
 bool		check_zeros(char **map);
 bool		flood_fill(t_data *data);
 
+// PARSING - Colors utils
+bool		check_and_store_color(char *line, t_data *data,
+				int *count, int index);
+
+// PARSING - Map utils
+int			get_map_width(char **map);
+int			find_map_start(char **file);
+char		**extract_map(char **file, int start_index);
+
+// PARSING - Texture utils
+void		init_textures_data(t_data *data);
+void		free_textures_data(t_data *data);
+int			check_and_store_texture(char *line, t_data *data,
+				int *count, int index);
+bool		open_textures(t_data *data);
+
 // GRAPHICS - Init
 bool		init_mlx(t_data *data);
 void		init_player(t_data *data);

@@ -85,10 +85,10 @@ bool	flood_fill(t_data *data)
 
 	map_copy = duplicate_map(data->map, data->map_height);
 	if (!map_copy)
-		return (printf("Error\nMalloc failed in flood_fill\n"), false);
+		return (ft_putstr_fd("Error\nMalloc failed in flood_fill\n", 2), false);
 	result = fill(map_copy, data->player_x, data->player_y, data);
 	free_map_array(map_copy);
 	if (!result)
-		printf("Error\nMap is not closed (flood fill failed)\n");
+		ft_putstr_fd("Error\nMap is not closed (flood fill failed)\n", 2);
 	return (result);
 }

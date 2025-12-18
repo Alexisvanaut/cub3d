@@ -31,7 +31,7 @@ int	main(int argc, char **argv)
 
 	if (argc != 2)
 	{
-		printf("Error: usage: ./cub3D <map.cub>\n");
+		ft_putstr_fd("Error: usage: ./cub3D <map.cub>\n", 2);
 		return (1);
 	}
 	file = manage_file(argv[1]);

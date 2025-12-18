@@ -16,13 +16,13 @@ bool	init_mlx(t_data *data)
 {
 	data->mlx = mlx_init();
 	if (!data->mlx)
-		return (printf("Error\nMLX initialization failed\n"), false);
+		return (ft_putstr_fd("Error\nMLX initialization failed\n", 2), false);
 	data->win = mlx_new_window(data->mlx, WIN_WIDTH, WIN_HEIGHT, "cub3D");
 	if (!data->win)
-		return (printf("Error\nWindow creation failed\n"), false);
+		return (ft_putstr_fd("Error\nWindow creation failed\n", 2), false);
 	data->img.img = mlx_new_image(data->mlx, WIN_WIDTH, WIN_HEIGHT);
 	if (!data->img.img)
-		return (printf("Error\nImage creation failed\n"), false);
+		return (ft_putstr_fd("Error\nImage creation failed\n", 2), false);
 	data->img.addr = mlx_get_data_addr(data->img.img,
 			&data->img.bits_per_pixel, &data->img.line_length,
 			&data->img.endian);

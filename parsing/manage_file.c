@@ -19,12 +19,12 @@ static bool	check_file_syntax(char *str)
 	len = ft_strlen(str);
 	if (len < 5)
 	{
-		printf("Error\nFilename too short\n");
+		ft_putstr_fd("Error\nFilename too short\n", 2);
 		return (false);
 	}
 	if (ft_strcmp(&str[len - 4], ".cub") != 0)
 	{
-		printf("Error\nFile must end with .cub\n");
+		ft_putstr_fd("Error\nFile must end with .cub\n", 2);
 		return (false);
 	}
 	return (true);
@@ -99,7 +99,7 @@ char	**manage_file(char *file)
 	_file = read_file(file);
 	if (!_file)
 	{
-		printf("Error\nCouldn't import file\n");
+		ft_putstr_fd("Error\nCouldn't import file\n", 2);
 		return (NULL);
 	}
 	return (_file);

@@ -81,7 +81,7 @@ int	main(int argc, char **argv)
 	init_data(&data);
 	if (argc != 2)
 	{
-		printf("Error\nUsage: ./cub3D <map.cub>\n");
+		ft_putstr_fd("Error\nUsage: ./cub3D <map.cub>\n", 2);
 		return (1);
 	}
 	if (!parse_file(argv[1], &data))

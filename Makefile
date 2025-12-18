@@ -25,9 +25,12 @@ RED			= \033[0;31m
 NC			= \033[0m
 
 # Source files
-SRC_FILES	= main.c init.c textures.c raycasting.c render.c controls.c cleanup.c
-PARSE_FILES	= check_map.c check_zeros.c flood_fill.c manage_colors.c \
-			  manage_file.c manage_map.c manage_texture.c parse_map.c
+SRC_FILES	= main.c init.c textures.c raycasting.c render.c controls.c \
+			  cleanup.c move.c set_step.c draw.c
+PARSE_FILES	= check_map.c check_map2.c check_zeros.c flood_fill.c \
+			  manage_colors.c manage_colors2.c manage_file.c \
+			  manage_map.c manage_map2.c manage_texture.c \
+			  manage_texture2.c parse_map.c main_parsing.c
 
 SRCS		= $(addprefix $(SRCDIR)/, $(SRC_FILES)) \
 			  $(addprefix $(PARSEDIR)/, $(PARSE_FILES))
