@@ -26,86 +26,18 @@ static bool	is_wall(t_data *data, int x, int y)
 bool	is_valid_move(t_data *data, double new_x, double new_y)
 {
 	if (is_wall(data, (int)(new_x - COLLISION_MARGIN),
-			(int)(new_y - COLLISION_MARGIN)))
+		(int)(new_y - COLLISION_MARGIN)))
 		return (false);
 	if (is_wall(data, (int)(new_x + COLLISION_MARGIN),
-			(int)(new_y - COLLISION_MARGIN)))
+		(int)(new_y - COLLISION_MARGIN)))
 		return (false);
 	if (is_wall(data, (int)(new_x - COLLISION_MARGIN),
-			(int)(new_y + COLLISION_MARGIN)))
+		(int)(new_y + COLLISION_MARGIN)))
 		return (false);
 	if (is_wall(data, (int)(new_x + COLLISION_MARGIN),
-			(int)(new_y + COLLISION_MARGIN)))
+		(int)(new_y + COLLISION_MARGIN)))
 		return (false);
 	return (true);
-}
-
-static void	move_forward(t_data *data)
-{
-	double	new_x;
-	double	new_y;
-
-	new_x = data->player.pos_x + data->player.dir_x * MOVE_SPEED;
-	new_y = data->player.pos_y + data->player.dir_y * MOVE_SPEED;
-	if (is_valid_move(data, new_x, data->player.pos_y))
-		data->player.pos_x = new_x;
-	if (is_valid_move(data, data->player.pos_x, new_y))
-		data->player.pos_y = new_y;
-	data->needs_render = true;
-}
-
-static void	move_backward(t_data *data)
-{
-	double	new_x;
-	double	new_y;
-
-	new_x = data->player.pos_x - data->player.dir_x * MOVE_SPEED;
-	new_y = data->player.pos_y - data->player.dir_y * MOVE_SPEED;
-	if (is_valid_move(data, new_x, data->player.pos_y))
-		data->player.pos_x = new_x;
-	if (is_valid_move(data, data->player.pos_x, new_y))
-		data->player.pos_y = new_y;
-	data->needs_render = true;
-}
-
-static void	move_strafe(t_data *data, int direction)
-{
-	double	new_x;
-	double	new_y;
-
-	if (direction == KEY_A)
-	{
-		new_x = data->player.pos_x - data->player.plane_x * MOVE_SPEED;
-		new_y = data->player.pos_y - data->player.plane_y * MOVE_SPEED;
-	}
-	else
-	{
-		new_x = data->player.pos_x + data->player.plane_x * MOVE_SPEED;
-		new_y = data->player.pos_y + data->player.plane_y * MOVE_SPEED;
-	}
-	if (is_valid_move(data, new_x, data->player.pos_y))
-		data->player.pos_x = new_x;
-	if (is_valid_move(data, data->player.pos_x, new_y))
-		data->player.pos_y = new_y;
-	data->needs_render = true;
-}
-
-static void	rotate_player(t_data *data, double angle)
-{
-	double	old_dir_x;
-	double	old_plane_x;
-
-	old_dir_x = data->player.dir_x;
-	data->player.dir_x = data->player.dir_x * cos(angle)
-		- data->player.dir_y * sin(angle);
-	data->player.dir_y = old_dir_x * sin(angle)
-		+ data->player.dir_y * cos(angle);
-	old_plane_x = data->player.plane_x;
-	data->player.plane_x = data->player.plane_x * cos(angle)
-		- data->player.plane_y * sin(angle);
-	data->player.plane_y = old_plane_x * sin(angle)
-		+ data->player.plane_y * cos(angle);
-	data->needs_render = true;
 }
 
 int	handle_keypress(int keycode, t_data *data)

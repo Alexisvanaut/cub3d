@@ -140,10 +140,30 @@ int			get_texture_color(t_img *texture, int x, int y);
 void		perform_dda(t_data *data, t_ray *ray);
 void		init_ray(t_data *data, t_ray *ray, int x);
 
+// GRAPHICS - Set steps
+void		set_step_x(t_data *data, t_ray *ray);
+void		set_step_y(t_data *data, t_ray *ray);
+
+
+// GRAPHICS - Draw
+void		draw_vertical_line(t_data *data, int x, t_ray *ray);
+void		draw_textured_line(t_data *data, int x, t_ray *ray);
+void		draw_floor_ceiling(t_data *data, int x,
+			int draw_start, int draw_end);
+
 // GRAPHICS - Render
 void		my_mlx_pixel_put(t_img *img, int x, int y, int color);
 void		draw_vertical_line(t_data *data, int x, t_ray *ray);
 void		render_frame(t_data *data);
+int			get_wall_texture_index(t_ray *ray);
+void		calculate_texture_params(t_data *data, t_ray *ray,
+			int *tex_x, t_img *texture);
+
+// GRAPHICS - move
+void		move_forward(t_data *data);
+void		move_backward(t_data *data);
+void		move_strafe(t_data *data, int direction);
+void		rotate_player(t_data *data, double angle);
 
 // GRAPHICS - Controls
 int			handle_keypress(int keycode, t_data *data);
