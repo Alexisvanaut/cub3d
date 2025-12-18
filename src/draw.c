@@ -12,29 +12,28 @@
 
 #include "../includes/cub3d.h"
 
-static void	init_tex_vars(t_data *data, t_ray *ray, double *vars, t_img **tex)
+static void	init_tex_vars(t_data *data, t_ray *ray, t_tex_draw *td, t_img **tex)
 {
 	*tex = &data->textures[get_wall_texture_index(ray)];
-	calculate_texture_params(data, ray, (int *)&vars[0], *tex);
-	vars[1] = 1.0 * (*tex)->height / ray->line_height;
-	vars[2] = (ray->draw_start - WIN_HEIGHT / 2 + ray->line_height / 2)
-		* vars[1];
+	calculate_texture_params(data, ray, &td->tex_y, *tex);
+	td->step = 1.0 * (*tex)->height / ray->line_height;
+	td->tex_pos = (ray->draw_start - WIN_HEIGHT / 2 + ray->line_height / 2)
+		* td->step;
 }
 
 void	draw_textured_line(t_data *data, int x, t_ray *ray)
 {
-	int		y;
-	double	vars[3];
-	t_img	*texture;
+	t_tex_draw	td;
+	t_img		*texture;
 
-	init_tex_vars(data, ray, vars, &texture);
-	y = ray->draw_start;
-	while (y < ray->draw_end)
+	init_tex_vars(data, ray, &td, &texture);
+	td.y = ray->draw_start;
+	while (td.y < ray->draw_end)
 	{
-		my_mlx_pixel_put(&data->img, x, y, get_texture_color(texture,
-				(int)vars[0], (int)vars[2] & (texture->height - 1)));
-		vars[2] += vars[1];
-		y++;
+		my_mlx_pixel_put(&data->img, x, td.y, get_texture_color(texture,
+				td.tex_y, (int)td.tex_pos & (texture->height - 1)));
+		td.tex_pos += td.step;
+		td.y++;
 	}
 }
 
