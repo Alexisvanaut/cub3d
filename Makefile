@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: alvanaut <alvanaut@student.42.fr>          +#+  +:+       +#+         #
+#    By: lucasbolens <lucasbolens@student.42.fr>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/26 00:00:00 by alvanaut          #+#    #+#              #
-#    Updated: 2025/12/17 14:00:00 by alvanaut         ###   ########.fr        #
+#    Updated: 2025/12/18 16:35:41 by lucasbolens      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 

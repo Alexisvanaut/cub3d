@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alvanaut < alvanaut@student.s19.be >       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/18 16:15:18 by alvanaut          #+#    #+#             */
+/*   Updated: 2025/12/18 16:26:08 by alvanaut         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
 # define CUB3D_H
 
@@ -105,6 +117,14 @@ typedef struct s_data
 	bool		needs_render;
 }				t_data;
 
+typedef struct s_tex_draw
+{
+	double	step;
+	double	tex_pos;
+	int		tex_y;
+	int		y;
+}	t_tex_draw;
+
 // PARSING - File management
 char		**manage_file(char *file);
 
@@ -160,12 +180,11 @@ void		init_ray(t_data *data, t_ray *ray, int x);
 void		set_step_x(t_data *data, t_ray *ray);
 void		set_step_y(t_data *data, t_ray *ray);
 
-
 // GRAPHICS - Draw
 void		draw_vertical_line(t_data *data, int x, t_ray *ray);
 void		draw_textured_line(t_data *data, int x, t_ray *ray);
 void		draw_floor_ceiling(t_data *data, int x,
-			int draw_start, int draw_end);
+				int draw_start, int draw_end);
 
 // GRAPHICS - Render
 void		my_mlx_pixel_put(t_img *img, int x, int y, int color);
@@ -173,7 +192,7 @@ void		draw_vertical_line(t_data *data, int x, t_ray *ray);
 void		render_frame(t_data *data);
 int			get_wall_texture_index(t_ray *ray);
 void		calculate_texture_params(t_data *data, t_ray *ray,
-			int *tex_x, t_img *texture);
+				int *tex_x, t_img *texture);
 
 // GRAPHICS - move
 void		move_forward(t_data *data);
