@@ -25,7 +25,8 @@ RED			= \033[0;31m
 NC			= \033[0m
 
 # Source files
-SRC_FILES	= main.c init.c textures.c raycasting.c render.c controls.c cleanup.c
+SRC_FILES	= main.c init.c textures.c raycasting.c render.c controls.c cleanup.c \
+			  draw.c set_step.c move.c
 PARSE_FILES	= check_map.c check_zeros.c flood_fill.c manage_colors.c \
 			  manage_file.c manage_map.c manage_texture.c parse_map.c
 
