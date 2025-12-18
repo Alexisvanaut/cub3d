@@ -30,7 +30,7 @@ SRC_FILES	= main.c init.c textures.c raycasting.c render.c controls.c \
 PARSE_FILES	= check_map.c check_map2.c check_map3.c check_zeros.c flood_fill.c \
 			  manage_colors.c manage_colors2.c manage_file.c \
 			  manage_map.c manage_map2.c manage_texture.c \
-			  manage_texture2.c manage_texture3.c parse_map.c main_parsing.c
+			  manage_texture2.c manage_texture3.c parse_map.c
 
 SRCS		= $(addprefix $(SRCDIR)/, $(SRC_FILES)) \
 			  $(addprefix $(PARSEDIR)/, $(PARSE_FILES))
