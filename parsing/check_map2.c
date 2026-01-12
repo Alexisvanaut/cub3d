@@ -14,15 +14,19 @@
 
 static bool	is_wall_or_space(char c)
 {
-	return (c == '1' || c == ' ' || c == '\n');
+	return (c == '1' || c == ' ');
 }
 
 static bool	check_first_row(char **map)
 {
 	int	i;
+	int	len;
 
+	len = ft_strlen(map[0]);
+	if (len > 0 && map[0][len - 1] == '\n')
+		len--;
 	i = 0;
-	while (map[0][i])
+	while (i < len)
 	{
 		if (!is_wall_or_space(map[0][i]))
 		{
@@ -37,9 +41,13 @@ static bool	check_first_row(char **map)
 static bool	check_last_row(char **map, int last_row)
 {
 	int	i;
+	int	len;
 
+	len = ft_strlen(map[last_row]);
+	if (len > 0 && map[last_row][len - 1] == '\n')
+		len--;
 	i = 0;
-	while (map[last_row][i])
+	while (i < len)
 	{
 		if (!is_wall_or_space(map[last_row][i]))
 		{

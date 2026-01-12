@@ -24,7 +24,5 @@ bool	parse_map(t_data *data, char **map)
 		return (false);
 	if (!flood_fill(data))
 		return (false);
-	if (!check_zeros(map))
-		return (false);
 	return (true);
 }

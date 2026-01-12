@@ -30,6 +30,7 @@ static void	free_split_rgb(char **split)
 static bool	is_valid_number(char *str)
 {
 	int	i;
+	int	digit_count;
 
 	if (!str || !*str)
 		return (false);
@@ -38,12 +39,16 @@ static bool	is_valid_number(char *str)
 		i++;
 	if (!str[i])
 		return (false);
+	digit_count = 0;
 	while (str[i] && str[i] != ' ' && str[i] != '\t' && str[i] != '\n')
 	{
 		if (!ft_isdigit(str[i]))
 			return (false);
+		digit_count++;
 		i++;
 	}
+	if (digit_count > 3)
+		return (false);
 	return (true);
 }
 

@@ -40,11 +40,14 @@ int	main(int argc, char **argv)
 	if (!get_textures(file, &data))
 		return (free_file(file), 1);
 	if (!get_colors(file, &data))
-		return (free_file(file), 1);
+		return (free_file(file), free_textures_paths(&data), 1);
 	if (!get_map(&data, file))
-		return (free_file(file), 1);
+		return (free_file(file), free_textures_paths(&data), 1);
 	if (!parse_map(&data, data.map))
-		return (free_file(file), 1);
+		return (free_file(file), free_textures_paths(&data),
+			free_map_array(data.map), 1);
 	free_file(file);
+	free_textures_paths(&data);
+	free_map_array(data.map);
 	return (0);
 }

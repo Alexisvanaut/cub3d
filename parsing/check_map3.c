@@ -15,7 +15,7 @@
 bool	check_char_valid(char c)
 {
 	if (c != '0' && c != '1' && c != 'N' && c != 'S'
-		&& c != 'E' && c != 'W' && c != ' ' && c != '\n')
+		&& c != 'E' && c != 'W' && c != ' ' && c != '\n' && c != '\t')
 		return (false);
 	return (true);
 }

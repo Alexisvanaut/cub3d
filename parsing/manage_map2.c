@@ -12,24 +12,28 @@
 
 #include "../includes/cub3d.h"
 
-int	get_map_width(char **map)
+static bool	is_valid_header_line(char *line)
 {
-	int	i;
-	int	max_width;
-	int	current_width;
+	char	*trimmed;
 
-	max_width = 0;
-	i = 0;
-	while (map[i])
-	{
-		current_width = 0;
-		while (map[i][current_width])
-			current_width++;
-		if (current_width > max_width)
-			max_width = current_width;
-		i++;
-	}
-	return (max_width);
+	trimmed = line;
+	while (*trimmed == ' ' || *trimmed == '\t')
+		trimmed++;
+	if (*trimmed == '\n' || *trimmed == '\0')
+		return (true);
+	if (ft_strncmp(trimmed, "NO ", 3) == 0)
+		return (true);
+	if (ft_strncmp(trimmed, "SO ", 3) == 0)
+		return (true);
+	if (ft_strncmp(trimmed, "WE ", 3) == 0)
+		return (true);
+	if (ft_strncmp(trimmed, "EA ", 3) == 0)
+		return (true);
+	if (ft_strncmp(trimmed, "F ", 2) == 0)
+		return (true);
+	if (ft_strncmp(trimmed, "C ", 2) == 0)
+		return (true);
+	return (false);
 }
 
 int	find_map_start(char **file)
@@ -45,6 +49,12 @@ int	find_map_start(char **file)
 			j++;
 		if (file[i][j] == '0' || file[i][j] == '1')
 			return (i);
+		if (!is_valid_header_line(file[i]))
+		{
+			ft_putstr_fd("Error\nInvalid content before map: ", 2);
+			ft_putstr_fd(file[i], 2);
+			return (-1);
+		}
 		i++;
 	}
 	return (-1);

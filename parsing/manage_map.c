@@ -22,6 +22,26 @@ int	get_map_height(char **map)
 	return (i);
 }
 
+int	get_map_width(char **map)
+{
+	int	i;
+	int	max_width;
+	int	current_width;
+
+	max_width = 0;
+	i = 0;
+	while (map[i])
+	{
+		current_width = 0;
+		while (map[i][current_width])
+			current_width++;
+		if (current_width > max_width)
+			max_width = current_width;
+		i++;
+	}
+	return (max_width);
+}
+
 static bool	is_empty_line(char *line)
 {
 	int	i;

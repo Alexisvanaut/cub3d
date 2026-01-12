@@ -1,99 +1,63 @@
-1. Structure et Setup Initial
+Bugs critiques
+1. Les tabs ne sont pas gérés dans check_char_valid
 
- Créer la structure principale pour stocker les données parsées:
+// check_map3.c - '\t' n'est pas dans la liste !
+if (c != '0' && c != '1' && c != 'N' && c != 'S'
+    && c != 'E' && c != 'W' && c != ' ' && c != '\n')
 
-typedef struct s_data {
-      char *no_texture;  // Chemin texture Nord
-      char *so_texture;  // Chemin texture Sud
-      char *we_texture;  // Chemin texture Ouest
-      char *ea_texture;  // Chemin texture Est
-      int floor_color[3];   // RGB floor
-      int ceiling_color[3]; // RGB ceiling
-      char **map;           // Map 2D
-      int map_width;
-      int map_height;
-      char player_dir;      // N, S, E, ou W
-      int player_x;
-      int player_y;
-  } t_data;
+2. Fuite mémoire dans main
 
-2. Lecture du Fichier
+// main_parsing.c - data.map n'est JAMAIS libéré
+if (!parse_map(&data, data.map))
+    return (free_file(file), 1);  // map pas free
+free_file(file);
+return (0);  // map toujours pas free + textures pas free
+```
 
- Vérifier que l'argument est bien un fichier .cub
- Vérifier que le fichier existe et peut être ouvert
- Lire tout le fichier ligne par ligne
- Stocker les lignes dans un tableau temporaire
+**3. Double-check redondant mais incomplet**
 
-3. Parsing des Textures
+Tu fais `flood_fill` puis `check_zeros`, mais `flood_fill` devrait déjà garantir que tous les '0' sont enclosed. L'ordre actuel pose problème : si `flood_fill` passe mais que `check_zeros` échoue, c'est incohérent.
 
- Parser la ligne NO et stocker le chemin
- Parser la ligne SO et stocker le chemin
- Parser la ligne WE et stocker le chemin
- Parser la ligne EA et stocker le chemin
- Vérifier que chaque texture existe et est accessible
- Vérifier qu'il n'y a pas de doublons (pas deux fois NO par exemple)
+## Pièges classiques non gérés
 
-4. Parsing des Couleurs
+**4. Contenu invalide entre le header et la map**
+```
+NO ./texture.xpm
+SO ./texture.xpm
+WE ./texture.xpm  
+EA ./texture.xpm
+F 255,255,255
+C 0,0,0
+ceci_est_invalide    <-- pas détecté !
+111111
+100001
+111111
 
- Parser la ligne F (Floor) au format R,G,B
- Parser la ligne C (Ceiling) au format R,G,B
- Vérifier que les valeurs RGB sont dans [0,255]
- Vérifier le format (virgules, pas d'espaces superflus, etc.)
- Vérifier qu'il n'y a pas de doublons
+find_map_start cherche juste la première ligne commençant par '0' ou '1', mais ne vérifie pas que les lignes intermédiaires sont vides ou valides.
 
-5. Parsing de la Map
+5. Overflow sur les couleurs RGB
 
- Identifier où commence la map (après toutes les configs)
- Récupérer toutes les lignes de la map
- Stocker la map dans un tableau 2D (char **)
- Gérer les espaces (ils font partie de la map!)
- Calculer la largeur et hauteur de la map
+// manage_colors2.c
+rgb[j] = ft_atoi(split[j]);
+if (rgb[j] < 0 || rgb[j] > 255)
+```
+Une valeur comme `999999999999` pourrait overflow `ft_atoi` et donner un résultat imprévisible.
 
-6. Validation de la Map
-
- Vérifier qu'il y a UN SEUL joueur (N, S, E, ou W)
- Stocker la position et direction du joueur
- Vérifier que la map contient uniquement: 0, 1, N, S, E, W, et espaces
- Vérifier que la map est fermée/entourée de murs:
-
- Première et dernière ligne = que des 1 ou espaces
- Première et dernière colonne = que des 1 ou espaces
- Flood fill ou algo similaire pour vérifier qu'on ne peut pas "sortir"
- Vérifier que les 0 ne touchent pas les espaces/bords
+**6. Caractères après les valeurs RGB**
+```
+F 255,255,255blabla
+ft_split sur ',' donne ["255", "255", "255blabla"], et is_valid_number s'arrête aux espaces/newlines mais pas aux lettres après les chiffres... ah non, ça devrait fail car la boucle check tous les caractères jusqu'à espace/newline. C'est bon.
 
 
+7. Espaces dans les chemins de texture
+// manage_texture3.c - s'arrête au premier espace
+while (line[j] && line[j] != ' ' && line[j] != '\n' && line[j] != '\t')
 
-7. Gestion d'Erreurs
-
- Afficher "Error\n" suivi d'un message explicite pour:
-
- Mauvaise extension de fichier
- Fichier introuvable
- Texture manquante ou doublon
- Couleur manquante, doublon, ou invalide
- Map invalide (pas fermée, mauvais caractères, etc.)
- Pas de joueur ou plusieurs joueurs
- Mauvais format général
-
-
- Libérer toute la mémoire allouée avant de sortir
-
-8. Fonctions Utilitaires à Créer
-
- ft_split pour séparer les lignes
- skip_spaces pour ignorer les espaces
- is_valid_map_char pour valider les caractères
- get_next_line ou équivalent pour lire le fichier
- Fonctions de free pour nettoyer la mémoire
-
-9. Tests à Faire
-
- Fichier valide basique
- Map avec espaces
- Map non fermée (doit error)
- Plusieurs joueurs (doit error)
- Pas de joueur (doit error)
- Couleurs > 255 (doit error)
- Textures manquantes (doit error)
- Éléments en désordre (doit fonctionner)
- Lignes vides entre les éléments (doit fonctionner)
+Un path comme NO ./path to/texture.xpm ne fonctionnera pas.
+8. Stack overflow potentiel sur grandes maps
+flood_fill est récursif. Sur une map de 1000x1000, tu peux exploser la stack. Solution : utiliser une version itérative avec une pile/queue.
+Incohérences mineures
+9. Gestion du '\n' final incohérente
+Certaines fonctions font if (len > 0 && map[y][len - 1] == '\n') len--;, d'autres non. La dernière ligne du fichier pourrait ne pas avoir de '\n`.
+10. free_map_array non défini dans les fichiers fournis
+Je ne vois pas cette fonction, assure-toi qu'elle existe et libère correctement.
